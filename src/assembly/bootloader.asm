@@ -1,37 +1,49 @@
 
 [org 0x7c00]
+[bits 16]
 
-mov bp, 0x7000
-mov sp, bp
-mov bh, 'a'
-push bx
+boot:
+    mov ah, 0x02
+    mov al, 0x01
+    mov ch, 0x00
+    mov cl, 0x02
+    mov dh, 0x00
+    mov dl, 0x00
+    mov bx, 0x1000
+    mov es, bx
+    int 0x13
+    jc disk_error
+    mov bx, good
+    call printf
+    jmp 0x1000:0x00
 
-mov bx, string
-
-call PrintString
-
-pop bx
-mov ah, 0x0e
-mov al, bh
-int 0x10
+disk_error:
+    mov bx, fail
+    call printf
+    hlt
 
 jmp $
 
-PrintString:
-	mov ah, 0x0e
-	mov al, [bx]
-	cmp al, 0
-	je exit
-	int 0x10
-	inc bx
-	jmp PrintString
-	ret
+printf:
+    mov ah, 0x0e
+    mov al, [bx]
+
+    cmp [bx], byte 0
+    je exit
+
+    int 0x10
+
+    inc bx
+
+    jmp printf
 
 exit:
-	ret
+    ret
 
-string:
-	db "Welcome to Map Operating System Build 1024", 0
+fail:
+    db "Failed to load!", 0
+good:
+    db "Loaded Kernel.. Starting...", 0
 
 times 510-($-$$) db 0
 dw 0xaa55
