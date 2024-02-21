@@ -1,6 +1,5 @@
 # MapOS
-Map Operating System Is An Attempt To Revive zOS Classic.
-
+Map Operating System MapOS Is An Operating System Intended To Teach Contributors About How An OS Works Along With It Being Associated With AdvanOS's Design Too. Which is a OS design by Youtuber Advan.
 # Guide to contribute
 All documentation must go in the res folder.
 All source files go in src, and header files in include.
