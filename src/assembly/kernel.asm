@@ -37,7 +37,7 @@ exit:
     ret
 
 string:
-    db "Ha", 0
+    db "Welcome to MapOS Buidl 1024!", 0
 
 times (512-($-$$)) db 0
 dw 0xaa55

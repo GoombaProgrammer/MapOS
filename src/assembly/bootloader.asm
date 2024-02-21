@@ -10,13 +10,12 @@ boot:
     mov dh, 0x00
     mov dl, 0x00
     mov bx, 0x7e00
-    mov es, bx
     int 0x13
     jc disk_error
     mov bx, good
     call printf
 
-    jmp 0x7e00:0x00
+    jmp 0x7e00
 
 disk_error:
     mov bx, fail
