@@ -1,5 +1,5 @@
-org 0
-bits 16
+[org 0x7e00]
+[bits 16]
 
 section .text
     global _start
@@ -15,63 +15,29 @@ _start:
     mov dl, 0x00
     int 0x10
 
+    mov bx, string
+    call print
+
+    jmp $
+
+print:
     mov ah, 0x0e
-    mov al, 'W'
+    mov al, [bx]
+
+    cmp [bx], byte 0
+    je exit
+
     int 0x10
 
-    mov al, 'e'
-    int 0x10
+    inc bx
 
-    mov al, 'l'
-    int 0x10
+    jmp print
 
-    mov al, 'c'
-    int 0x10
+exit:
+    ret
 
-    mov al, 'o'
-    int 0x10
-
-    mov al, 'm'
-    int 0x10
-
-    mov al, 'e'
-    int 0x10
-
-    mov al, ' '
-    int 0x10
-
-    mov al, 'T'
-    int 0x10
-
-    mov al, 'o'
-    int 0x10
-
-    mov al, ' '
-    int 0x10
-
-    mov al, 'K'
-    int 0x10
-
-    mov al, 'e'
-    int 0x10
-
-    mov al, 'r'
-    int 0x10
-
-    mov al, 'n'
-    int 0x10
-
-    mov al, 'e'
-    int 0x10
-
-    mov al, 'l'
-    int 0x10
-
-    mov al, '!'
-    int 0x10
-
-.done:
-    hlt
+string:
+    db "Ha", 0
 
 times (512-($-$$)) db 0
 dw 0xaa55
