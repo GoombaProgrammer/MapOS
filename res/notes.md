@@ -191,3 +191,6 @@ This prints the alphabet! yay!
 Kek, HERE'S YOUR HOMEWORK!!!!!!!!!!!!!!!
 
 Print the alphabet in alternating caps.
+
+# Strings, Keyboard Input
+Uncompleted
