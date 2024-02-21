@@ -1,5 +1,5 @@
 # MapOS
-Map Operating System MapOS Is An Operating System Intended To Replicate AdvanOS's Design. Which is a OS design by Youtuber Advan.
+Map Operating System MapOS Is An Operating System Intended To Replicate AdvanOS's Graphical Design. Which is a Graphical design by Youtuber Advan.
 # Guide to contribute
 All documentation must go in the res folder.
 All source files go in src, and header files in include.
