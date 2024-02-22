@@ -1,17 +1,15 @@
-del kernel.bin
-del bootloader.bin
-del bootloader.img
+del os.img
 
-nasm assembly/bootloader.asm -f bin -o bootloader.bin
+nasm assembly/mloader.asm -f elf32 -o bootloader.o
+nasm assembly/mloader.asm -f bin -o loader.bin
 
-nasm assembly/kernel.asm -f bin -o kernel.bin
+gcc  -m32 -ffreestanding -Wall -Wextra -c system/kernel.c -o kernel.o
 
-: nasm assembly/kernel.asm -f elf -o kernel.o
-: gcc -ffreestanding -mno-red-zone -c "system/kernel.cpp" -o mkrn.o
-: ld -o kernel.tmp -Ttext 0x7e00 kernel.o mkrn.o
+ld -T NUL -o kernel.tmp -m i386pe -Ttext 0x1000 bootloader.o kernel.o
+objcopy -O binary -j .text  kernel.tmp kernel.bin
 
-: objcopy -O binary kernel.tmp kernel.bin
+copy /b loader.bin+kernel.bin os.img
 
-copy /b bootloader.bin+kernel.bin bootloader.img
+pause
 
 bochsrc.bxrc
