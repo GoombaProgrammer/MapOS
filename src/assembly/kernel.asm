@@ -1,15 +1,10 @@
 [org 0x7e00]
-[bits 16]
 
-; [bits 32]
-; [extern main]
-; call main
+jmp EnterProtectedMode
 
-section .text
-    global _start
+EnterProtectedMode:
 
-_start:
-    mov ah, 0x00
+	mov ah, 0x00
     mov al, 0x03
     int 0x10
 
@@ -19,12 +14,42 @@ _start:
     mov dl, 0x00
     int 0x10
 
-    mov bx, string
-    call print
+	call EnableA20
+    cli
 
-    call inp
+	lgdt [gdt_descriptor]
+	mov eax, cr0
+	or eax, 1
+	mov cr0, eax
 
-    jmp $
+	jmp codeseg:StartProtectedMode
+
+EnableA20:
+    in al, 0x92
+    or al, 2
+    out 0x92, al
+    ret
+
+[bits 32]
+
+StartProtectedMode:
+
+	mov ax, dataseg
+	mov ds, ax
+	mov ss, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
+
+	; [extern main]
+	; call main
+
+	mov [0xb8000], byte 'x'
+	mov [0xb8002], byte '8'
+	mov [0xb8004], byte '6'
+	mov [0xb8006], byte '!'
+
+	jmp $
 
 print:
     mov ah, 0x0e
@@ -43,17 +68,35 @@ print:
 exit:
     ret
 
-inp:
-    mov ah, 0
-    int 0x16
+gdt_nulldesc:
+    dd 0
+    dd 0
+gdt_codedesc:
+    dw 0xFFFF
+    dw 0x0000
+    db 0x00
+    db 10011010b
+	db 11001111b
+	db 0x00
 
-    mov ah, 0x0e
-    int 0x10
-    jmp inp
-    ret
+gdt_datadesc:
+    dw 0xFFFF
+    dw 0x0000
+    db 0x00
+    db 10010010b
+	db 11001111b
+	db 0x00
 
-string:
-    db "Welcome to MapOS Build 1024! Type Anything >   ", 0
+gdt_end:
+
+
+gdt_descriptor:
+	gdt_size:
+		dw gdt_end - gdt_nulldesc - 1
+		dd gdt_nulldesc
+
+codeseg equ gdt_codedesc - gdt_nulldesc
+dataseg equ gdt_datadesc - gdt_nulldesc
 
 times (512-($-$$)) db 0
 dw 0xaa55
