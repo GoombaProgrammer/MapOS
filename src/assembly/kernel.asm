@@ -1,6 +1,10 @@
 [org 0x7e00]
 [bits 16]
 
+; [bits 32]
+; [extern main]
+; call main
+
 section .text
     global _start
 
