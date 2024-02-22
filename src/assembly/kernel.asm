@@ -18,6 +18,8 @@ _start:
     mov bx, string
     call print
 
+    call inp
+
     jmp $
 
 print:
@@ -32,12 +34,22 @@ print:
     inc bx
 
     jmp print
+    ret
 
 exit:
     ret
 
+inp:
+    mov ah, 0
+    int 0x16
+
+    mov ah, 0x0e
+    int 0x10
+    jmp inp
+    ret
+
 string:
-    db "Welcome to MapOS Buidl 1024!", 0
+    db "Welcome to MapOS Build 1024! Type Anything >   ", 0
 
 times (512-($-$$)) db 0
 dw 0xaa55
