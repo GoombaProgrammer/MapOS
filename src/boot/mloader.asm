@@ -1,4 +1,5 @@
 org 0x7c00
+[bits 16]
 
 KERNEL_OFFSET equ 0x7e00
 
@@ -22,7 +23,7 @@ disk_error:
     mov bx, failure
     call print
 
-include "../src/boot/print.asm"
+%include "../src/boot/print.asm"
 
 stringthing: db "Booting up.. Please Wait.    ", 0
 failure: db "Failed to boot up, please shutdown your computer.", 0

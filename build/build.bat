@@ -2,11 +2,11 @@ del os.img
 del bootloader.bin
 del kernel.bin
 
-fasm ../src/boot/mloader.asm bootloader.bin
-fasm ../src/system/kernel.asm kernel.bin
+nasm -f bin ../src/boot/mloader.asm -o bootloader.bin
+nasm -f bin ../src/system/kernel.asm -o kernel.bin
 
 copy /b bootloader.bin+kernel.bin os.img
 
-: pause
+pause
 
 bochsrc.bxrc
