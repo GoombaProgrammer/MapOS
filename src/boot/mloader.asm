@@ -22,6 +22,7 @@ boot:
 disk_error:
     mov bx, failure
     call print
+    jmp $
 
 %include "../src/boot/print.asm"
 
