@@ -47,13 +47,49 @@ StartProtectedMode:
 	mov fs, ax
 	mov gs, ax
 
-    ; output a pixel
-	mov edi, GRAPHICS_MEMORY
-    mov al, WHITE_ON_BLACK      ; the color of the pixel
-    mov [edi], al
+    mov eax, 10
+	mov ecx, 10
+	mov ebx, WHITE_ON_BLACK
+	call put_pixel
 
 	jmp $
 
+;------------------------------
+;                             |
+;   put_pixel method          |
+;   Plot a pixel on the screen|
+;							  |
+;	Arguments:                |
+;	eax - pos_x               |
+;	ecx - pos_y               |
+;	ebx - color 			  |
+;							  |
+;   kappetrov created		  |
+;-----------------------------|
+put_pixel:
+    ; Calculate memory address of pixel
+    mov edi, GRAPHICS_MEMORY       ; Base address of graphics memory
+    imul ecx, ecx, 320             ; Multiply pos_y by 320 (assuming 320 pixels per scanline)
+    add edi, ecx                   ; Add offset for y
+    add edi, eax                   ; Add offset for x
+
+    ; Move color into memory
+    mov eax, ebx                   ; Move color value into eax for consistency
+    mov [edi], eax                 ; Store color value at calculated memory address
+
+    ret                            ; Return from function
+
+
+;------------------------------------
+;                             		|
+;   print_string_pm method          |
+;   prints on the screen			|
+;							  		|
+;	Arguments:                		|
+;	ebx - string               		|
+;							  		|
+;   kappetrov created		  		|
+;-----------------------------------|
 print_string_pm:
     pusha
     mov edx, VIDEO_MEMORY
