@@ -7,6 +7,6 @@ nasm -f bin ../src/system/kernel.asm -o kernel.bin
 
 copy /b bootloader.bin+kernel.bin os.img
 
-pause
+: pause
 
 bochsrc.bxrc

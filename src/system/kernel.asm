@@ -43,7 +43,10 @@ StartProtectedMode:
 	mov fs, ax
 	mov gs, ax
 
-	mov ebx, strrr
+	mov ebx, welcome
+	call print_string_pm
+
+	mov ebx, newline
 	call print_string_pm
 
 	jmp $
@@ -53,8 +56,12 @@ print_string_pm:
     mov edx, VIDEO_MEMORY
 
 print_string_pm_loop:
+
     mov al, [ebx] ; [ebx] is the address of our character
     mov ah, COLOR
+
+	cmp al, 10
+	je handle_nextline
 
     cmp al, 0 ; check if end of string
     je print_string_pm_done
@@ -65,11 +72,19 @@ print_string_pm_loop:
 
     jmp print_string_pm_loop
 
+
+handle_nextline:
+	add edx, 160       ; Move to the next line (80 * 2 = 160)
+	mov [edx], ax      ; Store character and attribute in video memory
+	add ebx, 1
+	jmp print_string_pm_loop
+
 print_string_pm_done:
     popa
     ret
 
-strrr: db "32 bit ProtectedMode Started! Welcome to kernel!", 0
+welcome: db "Welcome to MapOS Build 1025!", 0
+newline: db 10, "This is a new line!", 0
 
 times 512-($-$$) db 0
 dw 0xaa55
